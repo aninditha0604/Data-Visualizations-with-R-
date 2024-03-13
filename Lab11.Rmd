@@ -1,0 +1,52 @@
+---
+title: 'Data Lab 11'
+author: "Anin Nair"
+date: "17-11-2023"
+output:
+  html_document:
+    df_print: paged
+---
+### 1. Setting up the libraries and datsets
+Loading all the libraries needed and importing the CO2 Emissions  CSV file using the *read.csv* function and then loading the first few lines of data using the *head* function.
+
+```{r}
+library (tidyverse)
+library(ggplot2)
+library(ggrepel)
+library(gridExtra)
+data <- read.csv("CIRI_data.csv")
+data
+```
+## Part 1. Time Trend
+
+Subsetting the data just for the El Salvador, India, Pakistan and Brazil from the entire csv file using the *subset* function. I selected the other countries based on personal interest and wanting to see how they compared to El Salvador. I had no other motives for the selection. It seems like the human rights score increased after the civil war which is indicated on the plot with a red line. They also have a higher human rights score than other countries after their civil war. I differentiated the countries using color as they looked aesthetically the best. 
+```{r}
+ES <- subset(data, CTRY == "El Salvador")
+ind <- subset(data, CTRY == "India")
+pak <- subset(data, CTRY == "Pakistan")
+br <- subset(data, CTRY == "Brazil")
+
+p1 <- ggplot(data = ES, mapping = aes(x = YEAR, y = PHYSINT, color = "blue")) + geom_line(size = 1) + geom_line(data = ind, mapping = aes(color = "green"), size = 1)+ geom_line(data = pak, mapping = aes(color = "brown"), size = 1)+ geom_line(data = br, mapping = aes(color = "purple"), size = 1)   + geom_vline(data = , xintercept = 1992, color = "red ") + labs(x = "Year", y = "Human Rights Score") + ggtitle("Human Rights Scores in El Salvador and other countries") + scale_color_manual(name = "Country", labels= c("El Salvador", "Pakistan", "India", "Brazil"), values = c("blue", "brown", "green", "purple")) 
+p1
+
+```
+
+## Part 2. Scatter Plots
+Subsetting the data just for the 1981 and 1992 from the entire csv file using the *subset* function. I arranged them both side to side for comparison using the *grid.arrange* function. Here I highlighted El Salvador by assigning it the color "blue" for both the plots! 
+```{r}
+year1981 <- subset(data, YEAR == 1981)
+year1992 <- subset(data, YEAR == 1992)
+year1981$el_sal <- rep('black', nrow(year1981))
+year1981$el_sal[year1981$CTRY == 'El Salvador'] <- 'blue'
+#any(year1992 == "El Salvador")
+year1992$el_sal2 <- rep('black', nrow(year1992))
+year1992$el_sal2[year1992$CTRY == 'El Salvador'] <- 'blue'
+require(gridExtra)
+p2 <- ggplot(data = year1981, mapping = aes(x = polity2, y = PHYSINT)) + geom_point(color = year1981$el_sal) + labs(x = "Democracy Score", y = "Human Rights Scores") + ggtitle("Relationship between Democracy and Human Rights Scores in 1981") 
+
+
+p3 <- ggplot(data = year1992, mapping = aes(x = polity2, y = PHYSINT)) + geom_point(color = year1992$el_sal2) + labs(x = "Democracy Score", y = "Human Rights Scores") + ggtitle("Relationship between Democracy and Human Rights Scores in 1992")
+grid.arrange(p2, p3, ncol=2)
+```
+
+

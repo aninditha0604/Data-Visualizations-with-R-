@@ -1,0 +1,51 @@
+---
+title: "Data Lab 3"
+author: "Anin Nair"
+date: "09-15-2023"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+## 1. Setup
+
+Loading all the libraries needed and importing the World Bank CSV file using the *read.csv* function and then loading the first few lines of data using the *head* function
+
+```{r}
+library (tidyverse)
+library(ggplot2)
+data = read.csv("world_bank.csv")
+head(data)
+```
+## 2. Subset the Dataset
+
+Subsetting the data just for the year 2018 from the entire csv file using the *subset* function 
+```{r}
+year218 <- subset(data, year == "2018")
+year218
+```
+
+## 3. Relationship between Trade and GDP
+
+Using the *ggplot* function to create a scatter plot to visualize the relationship between Trade and GDP in the year 2018 for all the countries. A linear trend line also has been added to  make the visualization easy to read. At first it seems like the countries with higher GDP, trade more however, on closer inspection there are way too many outliers for there to be a linear relationship
+```{r}
+plot1 <- ggplot(data = year218, mapping = aes(x = trade, y= gdp)) + labs(x= "Trade", y= "GDP") + geom_point(size = 3, color = "purple") + geom_smooth(method = lm) + ggtitle("Relationship between Trade and GDP(2018)")
+
+plot1
+```
+## 4. Relationship between Democracy and GDP
+Using the *ggplot* function to create two scatter plots to visualize the relationship between Democracy and GDP in the year 2018 for all the countries. A linear trend line also has been added to  make the visualization easy to read along with loess curve for a trend line as well. After looking at the plots it looks like there is no relationship between democracy and gdp. 
+```{r}
+plot2 <- ggplot(data = year218, mapping = aes(x = democ, y= gdp)) + labs(x= "Democracy", y= "GDP") + geom_point(size = 3, color = "violetred1") + geom_smooth(method = lm) + ggtitle("Relationship between Democracy and GDP with a linear trendline (2018)")
+
+plot2
+```
+
+
+```{r}
+plot3 <- ggplot(data = year218, mapping = aes(x = democ, y= gdp)) + labs(x= "Democracy", y= "GDP") + geom_point(size = 3, color = "violetred1") + geom_smooth() + ggtitle("Relationship between Democracy and GDP with a loess curve trendline (2018)")
+
+plot3
+```
+

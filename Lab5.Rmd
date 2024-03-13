@@ -1,0 +1,46 @@
+---
+title: "Data Lab 5"
+author: "Anin Nair"
+date: "10/04/2023"
+output:
+  html_document:
+    df_print: paged
+---
+
+## 1. Setup
+Loading all the libraries needed and importing the Excess Mortality CSV file using the *read.csv* function and then loading the first few lines of data using the *head* function.
+
+```{r}
+library (tidyverse)
+library(ggplot2)
+data = read.csv("gender_equality.csv")
+head(data)
+``````
+
+## 2. Plotting Treaty Signature Status 
+
+This plot showcases the distribution of the treaty status amongst different countries and if they have laws against gender discrimination. Gender discrimination has two variables -- 0(laws have not been made against gender discrimination) and 1(laws have been made against gender discrimination. This plot indicates that most countries have ratified the treaty while a small amount of countries have signed the treaty but not ratified it yet. There seem to be a large number of countries that have not implemented laws against discrimination but have still ratified the treaty. For all the three treaty statuses, the numbner of countries with no gender discrimination laws exceeds the number of countries with gender discrimination laws. 
+
+```{r}
+p1 <- ggplot(x = data, mapping = aes(x = data$treaty, fill = as.factor(data$discrimination_illegal))) + geom_bar(position = "dodge", color = "black") 
+p1 + labs(x= "Treaty", y= "The count of countries") + ggtitle("Treaty Signatures Status and its Relationship to Laws against Discrimination ") + labs(fill = "Gender Discrimination") + scale_fill_brewer(palette = "Spectral") 
+```
+
+## 3. Plotting Years of Ratification for each country 
+
+This plot showcases the distribution of the years of ratification amongst different countries and if they have laws against gender discrimination. Gender discrimination has two variables -- 0(laws have not been made against gender discrimination) and 1(laws have been made against gender discrimination. This plot indicates what year countries have ratified the treaty. A large number of countries ratified/didn't ratify it during the year 2000. There seem to be a large number of countries that have not implemented laws against discrimination when compared to countries that have. 
+
+```{r}
+p2 <- ggplot(x = data, mapping = aes(x = data$year_of_ratification, fill = as.factor(data$discrimination_illegal))) + geom_histogram(position = "dodge", bins = 5, color = "black") 
+p2 + labs(x= "The year of ratification", y= "The count of countries") + ggtitle("Years of Treaty Ratification and its Relationship to Laws against Discrimination") + scale_fill_brewer(palette = "Spectral")+ labs(fill = "Gender Discrimination")
+```
+
+## 4. Plotting the number of Women in Parliament 
+
+This plot showcases the distribution of the percentage of women in parliament in each countries and what type of treaty status those countries have. Treaty Status has three types of variable -- Not Signed, Ratified, Signed but not ratified. A lot of countries that have ratified the treaty have a larger number of women in their government, whereas that doesn't seem to be the case for 'Not Signed' and 'Signed but Not Ratified'
+
+```{r}
+p3 <- ggplot(x = data, mapping = aes(x = data$women_in_parliament, fill = as.factor(data$treaty))) + geom_histogram(position = "dodge", bins = 5, color = "black") 
+p3 + labs(x= "Women in Parliment", y= "The count of countries") + ggtitle("The Number of Women in Parliment and their relationship to Treaty Ratification") + scale_fill_brewer(palette = "Spectral")+ labs(fill = "Treaty Ratification")
+```
+

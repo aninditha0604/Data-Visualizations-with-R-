@@ -1,0 +1,58 @@
+---
+title: "Data Lab 4"
+author: "Anin Nair"
+date: "09/22/2023"
+output:
+  html_document:
+    df_print: paged
+---
+
+## 1. Setup
+Loading all the libraries needed and importing the Excess Mortality CSV file using the *read.csv* function and then loading the first few lines of data using the *head* function
+```{r}
+library (tidyverse)
+library(ggplot2)
+data = read.csv("excess_mortality.csv")
+head(data)
+```
+
+## 2. Subset
+Subsetting the data just for the United States from the entire csv file using the *subset* function 
+```{r}
+US <- subset(data, country == "United States")
+US
+```
+
+## 3. Plot Excess Mortality in the US
+
+Plotting the excess mortality in the United States as a line plot with a red vertical line to indicate the before and after for COVID -19 (03/11/2020). The pattern in excess mortality does seem to have changed. It looks like the excess mortality increased post COVID.
+
+```{r}
+US$date <- as.Date(US$date)
+US
+p1 <- ggplot(data = US, mapping = aes(x = date, y = excess_per_million)) + geom_line(size = 1) + labs(x = "Year", y = "Excess Mortality") + geom_vline(data = , xintercept = as.Date("2020-03-11"), color = "red")
+p1
+```
+## 4. Plot Excess Mortality in North America - Single Plot 
+Plotting the excess mortality in the  North America all in a single line plot with a red vertical line to indicate the before and after for COVID -19 (03/11/2020)
+
+```{r}
+data$date <- as.Date(data$date)
+p2 <- ggplot(data = data, mapping = aes(x = date, y = excess_per_million, color = country)) + geom_line(size = 1) + labs(x = "Year", y = "Excess Mortality") + geom_vline(data = , xintercept = as.Date("2020-03-11"), color = "red")
+p2
+```
+## 5. Plot Excess Mortality in North America - Facet Plot 
+Plotting the excess mortality in the United States as a facet plot that showcases each country in a separate panel with a red vertical line to indicate the before and after for COVID -19 (03/11/2020)
+
+```{r}
+data$date <- as.Date(data$date)
+p2 <- ggplot(data = data, mapping = aes(x = date, y = excess_per_million, color = country)) + geom_line(size = 1) + labs(x = "Year", y = "Excess Mortality") + geom_vline(data = , xintercept = as.Date("2020-03-11"), color = "red")
+p2 + facet_grid(. ~country)
+```
+## 6. Interpret plots 4 and 5 
+Plots 4 and 5 show that *Mexico* has the highest excess mortality rates while *Canada* has the lowest. It is also visible that all the countries saw an increase in excess mortality post COVID.
+
+
+## 7. Choose a Plot
+
+I think I prefer the facet plot instead of the single plot as it shows more clearly the trends in the excess mortality rates in each country. The single line plot has lot of overlap within the countries making it harder to decipher the trends and the plot. The facet plot also makes it easier for me to compare the trends shown by each country. 

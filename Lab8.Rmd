@@ -1,0 +1,29 @@
+---
+title: "Data Lab 8: Mapping Points and Polygons"
+author: "Anin Nair" 
+date: "10/27/2023" 
+output: html_notebook
+---
+
+## 1. Setup
+Loading all the libraries needed and importing the Ohio Protests CSV file using the *read.csv* function and then loading the first few lines of data using the *head* function.
+
+```{r}
+library (tidyverse)
+library(ggplot2)
+library(maps)
+```
+
+
+```{r}
+map <- map_data("county")
+head(map)
+data = read.csv("ohioprotests2022.csv")
+head(data)
+``````
+
+```{r}
+map <- left_join(world_map, data, by = c("subregion" = "event_id_cnty"))
+map
+```
+

@@ -1,0 +1,51 @@
+---
+title: 'Data Lab 10: Network Visualizations'
+author: "Anin Nair"
+date: "``13-11-2023"
+output:
+  html_document:
+    df_print: paged
+---
+
+### 1. Setting up the libraries and datsets
+Loading all the libraries needed and importing the CO2 Emissions  CSV file using the *read.csv* function and then loading the first few lines of data using the *head* function.
+
+```{r}
+library (tidyverse)
+library(ggplot2)
+library(ggrepel)
+library(ggnetwork)
+library(network)
+nodes <- read.csv("artists_2012_2020.csv")
+edges <- read.csv("collaboration_edgelist_2012_2020.csv")
+head(edges)
+head(nodes)
+```
+
+### 2.Setting up the nodes and the edges
+```{r}
+knitr::kable(nodes)
+knitr::kable(edges)
+network_data <- network(x=edges, vertices=nodes,directed=FALSE)
+network_data
+```
+### 3. Network Plot - 1
+Here I've plotted a network visualization of artists and Grammy nominees. This first plot specifies the gender of the artists. There is no specific reason as to why I chose the color, I just felt blue and violetred where suited well for a binary variable and also color-blind friendly. I believe that none of the layouts did good enough for this particular dataset but I chose this one because the _fruchtermanreingold_ is the most visually appealing. 
+
+```{r}
+net <- ggnetwork(network_data,
+layout="fruchtermanreingold")
+ggplot(net, aes(x=x,y=y,xend=xend,yend=yend)) + geom_edges() +geom_nodes(aes(color = as.factor(Gender)), size = 2.5) + labs(x = " ", y = " " , color = "Gender")+   ggtitle("Network Visualization of Grammy Nominees by Gender ") + scale_color_manual(labels = c("Male", "Female"), values = c("blue", "violetred"))
+#+ geom_nodelabel_repel(aes(label = nodes$Artist)) + theme_blank()
+
+```
+## 4. Network Plot - 2
+Here I've plotted a network visualization of artists and Grammy nominees. This first plot specifies if they won a Grammy or not. There is no specific reason as to why I chose the color, I just felt felt blue and violetred suited well for a binary variable and also color-blind friendly. I believe that none of the layouts did good enough for this particular dataset but I chose this one because the _fruchtermanreingold_ is the most visually appealing. 
+```{r}
+net <- ggnetwork(network_data,
+layout="fruchtermanreingold")
+ggplot(net, aes(x=x,y=y,xend=xend,yend=yend)) + geom_edges() +geom_nodes(aes(color = as.factor(GrammyWinner)), size = 2.5) + labs(x = " ", y = " " , color = "Grammy Winners")+ ggtitle("Network Visualization of Grammy Nominees by Winners ")+ scale_color_manual(labels = c("Not a Winner", "Winner"), values = c("blue", "violetred"))
+```
+## Note
+
+I was unfortunately unable to add labels to both of the plots. I tried all possible ways but I kept getting an error "Artist not found" even though I have a variable named Artist. I can email to you the image, because I'm not sure how to attach it on an R notebook file!

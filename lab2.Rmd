@@ -1,0 +1,61 @@
+---
+title: "Data Lab 2"
+author: "Anin Nair"
+date: "9/8/2023"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+## 1.Setup
+```{r}
+library (tidyverse)
+library(tibble)
+library(knitr)
+data = read.csv("summer_movies.csv")
+```
+
+## 2. Movie Information Table
+
+```{r}
+kable(data)
+kable(data[, c("name", "runtime_minutes", "boxoffice")], format = "markdown", col.names= c("Name", "Runtime", "Box Office Profit"), caption = "Here's some information about the movie csv" )
+```
+
+## 3. Recode the Sequel variable 
+```{r}
+data$sequel <- c("No sequel", "No sequel", "Sequel","No sequel", "No sequel", "Sequel", "Sequel")
+
+kable(data[, c("name", "runtime_minutes", "boxoffice", "sequel")], format = "markdown", col.names= c("Name", "Runtime", "Box Office Profit", "Sequel"), caption = "Here's some information about the movie csv" )
+```
+
+## 4. Subset the dataset 
+```{r}
+seq <- subset(data, sequel == "Sequel")
+seq
+```
+
+```{r}
+no_seq <- subset(data, sequel == "No sequel")
+no_seq
+```
+
+## 5.Comparing Critical/Audience Scores of Sequels and Non-Sequels
+```{r}
+mean(seq$critic_score)
+mean(seq$audience_score)
+```
+```{r}
+mean(no_seq$critic_score)
+mean(no_seq$audience_score)
+```
+Movies with sequels have a larger average critic score and audience score than movies with no sequels. 
+
+## 6. Crosstab
+
+```{r}
+cross_tab <- table(data$sequel, data$superhero)
+kable(cross_tab, caption= "Crosstable of Sequel vs Superhero")
+
+```

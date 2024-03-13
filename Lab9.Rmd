@@ -1,0 +1,46 @@
+---
+title: 'Data Lab 9: Visualizing Statistics'
+author: "Anin Nair"
+date: "07-11-2023"
+output:
+  html_document:
+    df_print: paged
+---
+
+### 1. Setup 
+Loading all the libraries needed and importing the CO2 Emissions  CSV file using the *read.csv* function and then loading the first few lines of data using the *head* function.
+
+```{r}
+library (tidyverse)
+library(ggplot2)
+library(ggrepel)
+data = read.csv("carbon_emissions.csv")
+head(data)
+```
+### 2. Scatterplot With Linear Model
+
+Using ggplot to plot a relationship between CO2 emmisions per capita and GDP per capita with 95% confidence interval and it looks like as the GDP increases, CO2 emissions also increase. Their is a positive linear relationship between the two! 
+
+```{r}
+scatter_plot <- ggplot(data=data,aes(x= co2_per_capita,y=energy_per_capita)) +geom_point() +labs(x="CO2 Emissions per Capita",y="GDP per Capita",caption="Source: Rotten Tomatoes") +theme_minimal()
+scatter_plot +  geom_smooth(method="lm")
+
+```
+### 3. Coefficient Plot of Multivariate Linear Model
+
+Using ggplot and the broom library I plotted a coefficient plot of a multivariate linear model of the CO2 Emissions data. It also shows the linear regression with 95% confidence interval 
+
+```{r}
+emisions_model <- lm(co2_per_capita~ gdp_per_capita + energy_per_capita,data=data)
+summary(emisions_model)
+library(broom)
+estimates <- tidy(emisions_model, conf.int=TRUE)
+estimates
+ggplot(data=estimates[2:3,],aes(x=estimate,y=term)) +
+geom_pointrange(aes(xmin=conf.low,xmax=conf.high)) +
+scale_y_discrete(labels=c("Energy Per Capita", "GDP Per Capita")) +
+labs(x="Regression Coefficient Estimate", y="Term",title="Predictors of CO2 Emission Per Capita", subtitle="From a Linear Regression of CO2 EMissions", caption="Horizontal lines indicate 95% confidence intervals") +
+geom_vline(xintercept=0,linetype="dashed")
+
+```
+
